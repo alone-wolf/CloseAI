@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Socket.IO Client Example</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <h1>Socket.IO Client Example</h1>
+  <!-- <div id="messages"></div>
+  <form id="message-form">
+    <input type="text" name="message" placeholder="Type your message here">
+    <button type="submit">Send</button>
+  </form> -->
+
+  <div id="chat"></div>
+  <form id="chat-form">
+    <input type="text" name="message" placeholder="Type your message here" value="请介绍一下GPT模型">
+    <button type="submit">Send</button>
+  </form>
+  <script>
+    const socket = io();
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnect");
+    });
+    socket.on("connect-error", () => {
+      console.log("connect-error");
+    });
+
+    const chatForm = document.getElementById('chat-form');
+    socket.on('chat-response', message => {
+      console.log(message);
+    });
+    socket.on('chat-error', message => {
+      console.log("err:", message);
+    });
+
+    // Send messages to the server
+    chatForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const input = event.target.elements.message;
+      const message = input.value;
+      // input.value = '';
+      socket.emit('chat', message);
+    });
+  </script>
+</body>
+
+</html>
